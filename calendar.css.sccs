@@ -1,0 +1,59 @@
+.calendar{
+  width: 100%;
+  height: 500px;
+  .day-names{
+    height: 10%;
+    .day{
+      width: 14.2%;
+      height: 100%;
+      display: inline-block;
+      text-align: center;
+      padding-top: 2%;
+    }
+  }
+  .week{
+    height: 18%;
+    .day{
+      width: 14.2%;
+      height: 100%;
+      border-top: solid 1px rgb(222, 219, 219);
+      display: inline-block;
+      position: relative;
+      .date{
+        position: absolute;
+        left: 2%;
+        tip: 2%;
+      }
+      .tasks{
+        position: absolute;
+        top: 20%;
+        width: 94%;
+        margin-left: 3%;
+        .task{
+          display: block;
+          background-color: #ddd;
+          width: 100%;
+          margin-bottom: 1%;
+          padding-left: 5%;
+        }
+      }
+    }
+    .weekend{
+      background: rgb(245, 245, 245);
+    }
+  }
+  .present-week{
+    .today{
+      background: rgb(255, 245, 245);
+      .date{
+        color: rgb(209, 107, 105);
+      }
+    }
+    .present-week-day{
+      border-top: 4px solid rgb(253, 214, 214);
+    }
+    .present-week-day.today{
+      border-top: 4px solid rgb(209, 107, 105);
+    }
+  }
+}
