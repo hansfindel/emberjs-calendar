@@ -1,5 +1,7 @@
 ExampleApp.EmberCalendarComponent =  Ember.Component.extend({
   needsRender: true,
+  classNames: ['kalendar', 'calendar'], 
+  tagName: 'ul',
 
   didInsertElement: function(){
     this.setDaysToCalendar(this.controller)
@@ -20,13 +22,13 @@ ExampleApp.EmberCalendarComponent =  Ember.Component.extend({
     modelId = elementMatch["id"]
     return false
   },
-  taskRoute: function(task){
-    // missions/1/tasks/1
-    missionId = task.get("mission").id
-    taskId = task.id
-    var str = ["/#/missions", missionId, "tasks", taskId].join("/")
-    return  str;
-  },
+  // taskRoute: function(task){
+  //   // missions/1/tasks/1
+  //   missionId = task.get("mission").id
+  //   taskId = task.id
+  //   var str = ["/#/missions", missionId, "tasks", taskId].join("/")
+  //   return  str;
+  // },
   fillCalendar: function(tasks, context){
     target = context.get("renderedName") || this.renderedName
     modelName = Ember.Inflector.inflector.singularize(target.split(".")[0])
@@ -57,6 +59,7 @@ ExampleApp.EmberCalendarComponent =  Ember.Component.extend({
     currentDate = new Date()
     firstDate = new Date()
     lastDate = new Date()
+    // update according to date-ranged given
     firstDate = this.changeDate(currentDate, -14)
     lastDate  = this.changeDate(currentDate, 14)
 
