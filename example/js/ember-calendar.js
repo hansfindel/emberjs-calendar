@@ -3,8 +3,18 @@ Ember.EmberCalendarComponent =  Ember.Component.extend({
   classNames: ['kalendar', 'calendar'], 
   tagName: 'ul',
 
-  // tasks ? 
+  // configurable variables/params
   weeks: 5, 
+  // 'date' name or method to access its date - default scheduledAt
+  // 'tag'  name or method to access its tagname for calendar-coloring - those tags get modified on the css
+  // 'name'  name or method to access its text on the calendar
+  // isCompleted
+  // save tasks for future reference? 
+  // link method with task as a param 
+  // calendar.options - day names, starting day, size? ... 
+
+  // pending
+  // multi-date tasks
 
   didInsertElement: function(){
 
@@ -15,11 +25,7 @@ Ember.EmberCalendarComponent =  Ember.Component.extend({
     // works only when loaded for first time
 
     self = this
-    // ExampleApp.Task.store.find("task").then(function(tasks){
-    //   self.fillCalendar(tasks, self)
-    // })
-    // console.log(this.get("tasks"))
-    self.fillCalendar(self.get('tasks'), self)
+    self.fillCalendar(self.get('tasks')||[], self)
     this.needsRender = false;
   },
 
@@ -36,11 +42,6 @@ Ember.EmberCalendarComponent =  Ember.Component.extend({
   //   return  str;
   // },
   fillCalendar: function(tasks, context){
-    // target = context.get("renderedName") || this.renderedName
-    // modelName = Ember.Inflector.inflector.singularize(target.split(".")[0])
-    // modelId = context.controller.get("id")
-    // elementMatch = {model: modelName, id: modelId}
-
     self = this;
 
     tasks.map(function(task){
@@ -49,15 +50,19 @@ Ember.EmberCalendarComponent =  Ember.Component.extend({
       // if(self.filter(task, elementMatch, context)){return;}
 
       var taskDate = task['scheduledAt'] || task.get("scheduledAt");
+      var name = (task['name'] || task.get("name"))
+      var className = (task.hasOwnProperty('isCompleted') ? task['isCompleted'] : task.get('isCompleted')) ? "completed" : "pending"
+
       if(taskDate){
         taskDate = taskDate.toLocaleDateString()
       }
       var $elem = $("[data-date='"+taskDate+"']", ".valid")
       if($elem){
         // var str = "<div class='task' data-id='"+task.id+"'><a href='"+self.taskRoute(task)+"'}}>" + task.get("name") + "</a></div>";
-        var str = "<div class='task' data-id='"+task.id+"'><a href='#'>" + (task['name'] || task.get("name")) + "</a></div>";
-        var target = $(".valid[data-date='"+taskDate+"'] .tasks")
-        $(target).append(str)
+
+        var str = "<div class='task' data-id='"+task.id+"'><a class='"+className+"' href='#'>" + name + "</a></div>";
+        var $target = $(".valid[data-date='"+taskDate+"'] .tasks")
+        $target.append(str)
       }
     })
   },

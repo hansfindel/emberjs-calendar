@@ -53,24 +53,26 @@ ExampleApp.Task = DS.Model.extend({
 var today = Ember.Date.constructor(new Date())
 var yesterday = Ember.Date.constructor(new Date())
 yesterday.setDate(yesterday.getDate() - 1)
+// var nextWeek = Ember.Date.constructor(new Date())
+// nextWeek.setDate(nextWeek.getDate() + 5)
 ExampleApp.Task.FIXTURES = [
   {
     id: 1,
     name: 'Learn Ember.js',
     isCompleted: true, 
-    scheduledAt: today
+    scheduledAt: yesterday
   },
   {
     id: 2,
     name: 'Add ember calendar',
-    isCompleted: false, 
-    scheduledAt: yesterday
+    isCompleted: true, 
+    scheduledAt: today
   },
   {
     id: 3,
     name: 'Enjoy!',
     isCompleted: false, 
-    scheduledAt: yesterday
+    scheduledAt: today
   }
 ];
 

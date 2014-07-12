@@ -38,11 +38,19 @@
 }
 .calendar .week .tasks .task{
   display: block;
-  background-color: #ddd;
+  background-color: #f1f1f1;
   width: 100%;
   margin-bottom: 1%;
   padding-left: 5%;
 }
+.calendar .week .tasks .task a{
+  color: #050505;
+}
+/*.calendar .week .tasks .task a.completed::after{
+}
+.calendar .week .tasks .task a.pending::after{
+  content: " - p";
+}*/
 .calendar .week .weekend{
   background: rgb(245, 245, 245);
 }
