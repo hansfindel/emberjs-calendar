@@ -1,0 +1,45 @@
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Ember Calendar Example</title>
+        <meta property="st:title" content="Ember Calendar Example">
+        <link rel="stylesheet" href="css/kalendar.css" type="text/css">
+    
+        <!--link rel="icon" type="image/png" href="fotos/favicon.png"-->
+        <meta name="author" content="Hans Findel - https://github.com/hansfindel">
+        <meta name="robots" content="follow,index">
+        <meta name="description" content="Simple ember plugin to add a calendar into your own application">
+        <meta name="keywords" content="calendar, ember, js">
+        <meta charset="utf-8">
+    </head>
+    <body>
+        <script type="text/javascript" src="vendor/jquery.js"></script>
+        <script type="text/javascript" src="vendor/handlebars.js"></script>
+        <script type="text/javascript" src="vendor/ember.js"></script>
+
+        <script type="text/x-handlebars" data-template-name="application">
+            <nav class="navbar" role="navigation">
+                Some navigation options
+            </nav>
+            <div class="container">
+                {{outlet}}
+            </div>
+            <hr />
+            <footer>
+              <small>Copyright &copy; 2014 <a href="https://github.com/hansfindel/emberjs-calendar">Ember Calendar</a> <i class="fa fa-star"></i> Created by <a href="https://github.com/hansfindel">Hans Findel</a></small>
+            </footer>
+        </script>
+        <script type="text/x-handlebars" data-template-name="home">
+            {{ember-calendar}}
+        </script>
+
+        <script type="text/x-handlebars" data-template-name="components/ember-calendar">
+            {{{calendar 5}}}
+        </script>
+
+        
+        <script type="text/javascript" src="js/application.js"></script>
+        <script type="text/javascript" src="js/calendar_helper.js"></script>
+        <script type="text/javascript" src="js/ember-calendar.js"></script>
+    </body>
+</html>
