@@ -3,6 +3,12 @@
 
 A great ember (js) calendar module as a component
 
+## Requirements
+
+* jQuery
+* emberjs
+* *ember-data (recommended)
+	
 ## Installation
 
 In order to make this work you have to:
