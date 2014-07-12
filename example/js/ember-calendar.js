@@ -7,6 +7,7 @@ Ember.EmberCalendarComponent =  Ember.Component.extend({
   weeks: 5, 
 
   didInsertElement: function(){
+
     this.setDaysToCalendar(this.controller)
     this._super();
     console.log("this.needsRender: ", this.needsRender);
@@ -17,6 +18,8 @@ Ember.EmberCalendarComponent =  Ember.Component.extend({
     // ExampleApp.Task.store.find("task").then(function(tasks){
     //   self.fillCalendar(tasks, self)
     // })
+    // console.log(this.get("tasks"))
+    self.fillCalendar(self.get('tasks'), self)
     this.needsRender = false;
   },
 
@@ -33,25 +36,26 @@ Ember.EmberCalendarComponent =  Ember.Component.extend({
   //   return  str;
   // },
   fillCalendar: function(tasks, context){
-    target = context.get("renderedName") || this.renderedName
-    modelName = Ember.Inflector.inflector.singularize(target.split(".")[0])
-    modelId = context.controller.get("id")
-    elementMatch = {model: modelName, id: modelId}
+    // target = context.get("renderedName") || this.renderedName
+    // modelName = Ember.Inflector.inflector.singularize(target.split(".")[0])
+    // modelId = context.controller.get("id")
+    // elementMatch = {model: modelName, id: modelId}
 
     self = this;
 
     tasks.map(function(task){
       // discard task if filter doesnt apply to it
       // model is the current one (model={shop, user}, id=modelId)
-      if(self.filter(task, elementMatch, context)){return;}
+      // if(self.filter(task, elementMatch, context)){return;}
 
-      taskDate = task.get("scheduledAt");
+      var taskDate = task['scheduledAt'] || task.get("scheduledAt");
       if(taskDate){
         taskDate = taskDate.toLocaleDateString()
       }
-      $elem = $("[data-date='"+taskDate+"']", ".valid")
+      var $elem = $("[data-date='"+taskDate+"']", ".valid")
       if($elem){
-        var str = "<div class='task' data-id='"+task.id+"'><a href='"+self.taskRoute(task)+"'}}>" + task.get("name") + "</a></div>";
+        // var str = "<div class='task' data-id='"+task.id+"'><a href='"+self.taskRoute(task)+"'}}>" + task.get("name") + "</a></div>";
+        var str = "<div class='task' data-id='"+task.id+"'><a href='#'>" + (task['name'] || task.get("name")) + "</a></div>";
         var target = $(".valid[data-date='"+taskDate+"'] .tasks")
         $(target).append(str)
       }
