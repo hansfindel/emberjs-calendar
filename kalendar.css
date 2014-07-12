@@ -1,0 +1,68 @@
+.kalendar, .kalendar *{
+  padding: 0px;
+}
+.calendar{
+  width: 100%;
+  height: 500px;
+}
+.calendar .day-names{
+  height: 10%;
+}
+.calendar .day-names .day{
+  width: 14.2%;
+  height: 100%;
+  display: inline-block;
+  text-align: center;
+  padding-top: 2%;
+}
+.calendar .week{
+  height: 18%;
+}
+.calendar .week .day{
+  width: 14.2%;
+  height: 100%;
+  border-top: solid 1px rgb(222, 219, 219);
+  display: inline-block;
+  position: relative;
+}
+.calendar .week .day .date{
+  position: absolute;
+  left: 2%;
+  top: 2%;
+}      
+.calendar .week .tasks{
+  position: absolute;
+  top: 20%;
+  width: 94%;
+  margin-left: 3%;
+}
+.calendar .week .tasks .task{
+  display: block;
+  background-color: #f1f1f1;
+  width: 100%;
+  margin-bottom: 1%;
+  padding-left: 5%;
+}
+.calendar .week .tasks .task a{
+  color: #050505;
+}
+/*.calendar .week .tasks .task a.completed::after{
+}
+.calendar .week .tasks .task a.pending::after{
+  content: " - p";
+}*/
+.calendar .week .weekend{
+  background: rgb(245, 245, 245);
+}
+.calendar .present-week .today{
+  background: rgb(255, 245, 245);
+}
+.calendar .present-week .today .date{
+  color: rgb(209, 107, 105);
+}
+.calendar  .present-week-day{
+  border-top: 4px solid rgb(253, 214, 214);
+}
+.calendar  .present-week-day.today{
+  border-top: 4px solid rgb(209, 107, 105);
+}
