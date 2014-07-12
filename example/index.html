@@ -16,6 +16,7 @@
         <script type="text/javascript" src="vendor/jquery.js"></script>
         <script type="text/javascript" src="vendor/handlebars.js"></script>
         <script type="text/javascript" src="vendor/ember.js"></script>
+        <script type="text/javascript" src="vendor/ember-data.js"></script>
 
         <script type="text/x-handlebars" data-template-name="application">
             <nav class="navbar" role="navigation">
@@ -31,17 +32,19 @@
         </script>
         <script type="text/x-handlebars" data-template-name="home">
             <div class="home" style="padding: 5px;">
-              {{ember-calendar}}
+              {{ember-calendar tasks=ExampleApp.Task.FIXTURES}}
             </div>
         </script>
 
         <script type="text/x-handlebars" data-template-name="components/ember-calendar">
+            
             {{{calendar 5}}}
+            // {{tasks.length}}
         </script>
 
-        
-        <script type="text/javascript" src="js/application.js"></script>
         <script type="text/javascript" src="js/calendar_helper.js"></script>
-        <script type="text/javascript" src="js/ember-calendar.js"></script>
+        <script type="text/javascript" src="js/ember-calendar.js"></script>        
+        <script type="text/javascript" src="js/application.js"></script>
+
     </body>
 </html>

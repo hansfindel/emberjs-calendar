@@ -1,7 +1,10 @@
-ExampleApp.EmberCalendarComponent =  Ember.Component.extend({
+Ember.EmberCalendarComponent =  Ember.Component.extend({
   needsRender: true,
   classNames: ['kalendar', 'calendar'], 
   tagName: 'ul',
+
+  // tasks ? 
+  weeks: 5, 
 
   didInsertElement: function(){
     this.setDaysToCalendar(this.controller)

@@ -12,7 +12,9 @@ Handlebars.registerHelper('calendar', function(weeks, options) {
     "7": "Sunday"
   }
 
-  // var ret = "<ul class='calendar'>"; +
+  // var ret = "<ul class='calendar kalendar'>"; 
+  // ret += ret = "<ul class='day-names'>"
+  
   var ret = "<ul class='day-names'>"
   for(var j=0; j<7; j++){
     ret = ret + "<li class='day' data-day='"+(j+1)%7+"'>"+ dayNames[j+1] +"</li>"
@@ -25,6 +27,7 @@ Handlebars.registerHelper('calendar', function(weeks, options) {
     }
     ret = ret + "</ul>"
   }
+
   // ret = ret + "</ul>"
 
   return ret;
