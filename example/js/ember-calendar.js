@@ -6,17 +6,17 @@ Ember.EmberCalendarComponent =  Ember.Component.extend({
 
   // configurable variables/params
   weeks: 5, 
+  allowDragDrop: true,
   setScheduledAtMethod: "setScheduledAt", 
-  // 'date' name or method to access its date - default scheduledAt
+  getScheduledAtMethod: "scheduledAt", 
+  isCompletedMethod: "isCompleted",
+
   // 'tag'  name or method to access its tagname for calendar-coloring - those tags get modified on the css
   // 'name'  name or method to access its text on the calendar
-  // isCompleted
-  // save tasks for future reference? - update calendar on event
   // link method with task as a param 
   // calendar.options - day names, starting day, size? ... 
   // calendar-cell onclick event callback // if any, redirect to nested view (new_x) with a modal with the date as param
   // calendar-task element onclick_event/option_click callback // redirect to show view or edit modal view 
-  // dragable? - callback on element to update its date
 
   // pending
   // multi-date tasks
@@ -25,7 +25,6 @@ Ember.EmberCalendarComponent =  Ember.Component.extend({
 
     this.setDaysToCalendar(this.controller)
     this._super();
-    console.log("this.needsRender: ", this.needsRender);
     if(!this.needsRender){ return; }
     // works only when loaded for first time
 
@@ -33,7 +32,9 @@ Ember.EmberCalendarComponent =  Ember.Component.extend({
     ember_calendar.set("tasks", (ember_calendar.get('tasks')||[]))
     ember_calendar.fillCalendar(ember_calendar.tasks, ember_calendar)
     ember_calendar.needsRender = false;
-    ember_calendar.activateDragAndDrop(ember_calendar);
+    if(ember_calendar.allowDragDrop){
+      ember_calendar.activateDragAndDrop(ember_calendar);  
+    }
   },
 
   filter: function(task, elementMatch){
@@ -56,9 +57,9 @@ Ember.EmberCalendarComponent =  Ember.Component.extend({
       // model is the current one (model={shop, user}, id=modelId)
       // if(self.filter(task, elementMatch, context)){return;}
 
-      var taskDate = task['scheduledAt'] || task.get("scheduledAt");
+      var taskDate = task[self.getScheduledAtMethod] || task.get(self.getScheduledAtMethod);
       var name = (task['name'] || task.get("name"))
-      var className = (task.hasOwnProperty('isCompleted') ? task['isCompleted'] : task.get('isCompleted')) ? "completed" : "pending"
+      var className = (task.hasOwnProperty(self.isCompletedMethod) ? task[self.isCompletedMethod] : task.get(self.isCompletedMethod)) ? "completed" : "pending"
 
       if(taskDate){
         taskDate = taskDate.toLocaleDateString()
@@ -158,7 +159,7 @@ Ember.EmberCalendarComponent =  Ember.Component.extend({
       return obj.id == id
     })[0]
   },
-  
+
   // View effects 
   cleanTargetDayCell: function(){
       targetDayCell = ""
@@ -198,8 +199,6 @@ Ember.EmberCalendarComponent =  Ember.Component.extend({
       col.addEventListener('dragstart', context.handleDragStart, false);
       // col.addEventListener('drop', handleDrop, false); // does not trigger
     });    
-
-
   }  
 
 

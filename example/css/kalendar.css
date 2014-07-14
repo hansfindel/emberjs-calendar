@@ -66,5 +66,5 @@
 .calendar .present-week-day.today{
   border-top: 4px solid rgb(209, 107, 105);
 }
-.calendar .over{background: #fcfcfc;}
+.calendar .over{background: #fcfcfc; opacity: 0.6;}
 .calendar .drag_object{opacity: 0.4;}
