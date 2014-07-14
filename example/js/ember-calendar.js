@@ -5,6 +5,7 @@ Ember.EmberCalendarComponent =  Ember.Component.extend({
 
   // configurable variables/params
   weeks: 5, 
+  tasks: [], 
   // 'date' name or method to access its date - default scheduledAt
   // 'tag'  name or method to access its tagname for calendar-coloring - those tags get modified on the css
   // 'name'  name or method to access its text on the calendar
@@ -28,9 +29,10 @@ Ember.EmberCalendarComponent =  Ember.Component.extend({
     // works only when loaded for first time
 
     var ember_calendar = this
-    ember_calendar.fillCalendar(ember_calendar.get('tasks')||[], ember_calendar)
+    ember_calendar.set("tasks", (ember_calendar.get('tasks')||[]))
+    ember_calendar.fillCalendar(ember_calendar.tasks, ember_calendar)
     ember_calendar.needsRender = false;
-    ember_calendar.activateDragAndDrop();
+    ember_calendar.activateDragAndDrop(ember_calendar);
   },
 
   filter: function(task, elementMatch){
@@ -150,7 +152,11 @@ Ember.EmberCalendarComponent =  Ember.Component.extend({
     return this.changeDate(_date, days + 1)
   },
 
-
+  getTaskById: function(id){
+    return this.get("tasks").filter(function(obj){
+      return obj.id == id
+    })[0]
+  },
   // View effects 
   cleanTargetDayCell: function(){
       targetDayCell = ""
@@ -163,31 +169,37 @@ Ember.EmberCalendarComponent =  Ember.Component.extend({
   handleDragLeave: function(e) {
     this.classList.remove('over');  // this / e.target is previous target element.
   },
-  handleDragEnd: function(e) {
-    var html = e.target;
-    $(".day[data-date='"+targetDayCell+"'] .tasks").append(html)
-    html.classList.remove('drag_object')
+  handleDragEnd: function(context){
+    return function(e) {
+      var html = e.target;
+      $(".day[data-date='"+targetDayCell+"'] .tasks").append(html)
+      html.classList.remove('drag_object')
+      // console.log(context)
+      console.log("html: ", html)
+      console.log(context.getTaskById( $(html).data("id") ))
+    }
   },
   handleDragStart: function(e) {
     // this.style.opacity = '0.4';  // add class - remove on dragEnd
-    this.classList.add('drag_object')
+    e.target.classList.add('drag_object')
   },
-  activateDragAndDrop: function(){
-    var ember_calendar = this;
+  activateDragAndDrop: function(context){
     var targetDayCell = ""
     var cels = $('.day') // append on its "tasks"
     cels.map(function(i, cel){
       // cel.addEventListener('drop', handleDrop, false)
-      cel.addEventListener('dragend',   ember_calendar.handleDragEnd, false)
-      cel.addEventListener('dragenter', ember_calendar.handleDragEnter, false)
-      cel.addEventListener('dragleave', ember_calendar.handleDragLeave, false)
-      cel.addEventListener('dragstart', ember_calendar.cleanTargetDayCell, false)
+      cel.addEventListener('dragend',   context.handleDragEnd(context), false)
+      cel.addEventListener('dragenter', context.handleDragEnter, false)
+      cel.addEventListener('dragleave', context.handleDragLeave, false)
+      cel.addEventListener('dragstart', context.cleanTargetDayCell, false)
     })
     var cols = $('.kalendar .task');
     cols.map(function(i, col) {
-      col.addEventListener('dragstart', ember_calendar.handleDragStart, false);
+      col.addEventListener('dragstart', context.handleDragStart, false);
       // col.addEventListener('drop', handleDrop, false); // does not trigger
     });    
+
+
   }  
 
 
