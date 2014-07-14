@@ -60,13 +60,19 @@ ExampleApp.Task.FIXTURES = [
     id: 1,
     name: 'Learn Ember.js',
     isCompleted: true, 
-    scheduledAt: yesterday
+    scheduledAt: yesterday, 
+    setScheduledAt: function(date){
+    	this.scheduledAt = date
+    }
   },
   {
     id: 2,
     name: 'Add ember calendar',
     isCompleted: true, 
-    scheduledAt: today
+    scheduledAt: today, 
+    setScheduledAt: function(date){
+    	this.scheduledAt = date
+    }
   },
   {
     id: 3,

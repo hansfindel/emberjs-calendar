@@ -175,8 +175,11 @@ Ember.EmberCalendarComponent =  Ember.Component.extend({
       $(".day[data-date='"+targetDayCell+"'] .tasks").append(html)
       html.classList.remove('drag_object')
       // console.log(context)
-      console.log("html: ", html)
-      console.log(context.getTaskById( $(html).data("id") ))
+      var task = context.getTaskById( $(html).data("id") );
+      if(task && task.setScheduledAt){
+        task.setScheduledAt(new Date(targetDayCell))
+        console.log(task)
+      }
     }
   },
   handleDragStart: function(e) {
