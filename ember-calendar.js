@@ -2,16 +2,21 @@ Ember.EmberCalendarComponent =  Ember.Component.extend({
   needsRender: true,
   classNames: ['kalendar', 'calendar'], 
   tagName: 'ul',
+  tasks: [], 
 
   // configurable variables/params
   weeks: 5, 
-  // 'date' name or method to access its date - default scheduledAt
+  allowDragDrop: true,
+  setScheduledAtMethod: "setScheduledAt", 
+  getScheduledAtMethod: "scheduledAt", 
+  isCompletedMethod: "isCompleted",
+
   // 'tag'  name or method to access its tagname for calendar-coloring - those tags get modified on the css
   // 'name'  name or method to access its text on the calendar
-  // isCompleted
-  // save tasks for future reference? 
   // link method with task as a param 
   // calendar.options - day names, starting day, size? ... 
+  // calendar-cell onclick event callback // if any, redirect to nested view (new_x) with a modal with the date as param
+  // calendar-task element onclick_event/option_click callback // redirect to show view or edit modal view 
 
   // pending
   // multi-date tasks
@@ -20,13 +25,16 @@ Ember.EmberCalendarComponent =  Ember.Component.extend({
 
     this.setDaysToCalendar(this.controller)
     this._super();
-    console.log("this.needsRender: ", this.needsRender);
     if(!this.needsRender){ return; }
     // works only when loaded for first time
 
-    self = this
-    self.fillCalendar(self.get('tasks')||[], self)
-    this.needsRender = false;
+    var ember_calendar = this
+    ember_calendar.set("tasks", (ember_calendar.get('tasks')||[]))
+    ember_calendar.fillCalendar(ember_calendar.tasks, ember_calendar)
+    ember_calendar.needsRender = false;
+    if(ember_calendar.allowDragDrop){
+      ember_calendar.activateDragAndDrop(ember_calendar);  
+    }
   },
 
   filter: function(task, elementMatch){
@@ -42,16 +50,16 @@ Ember.EmberCalendarComponent =  Ember.Component.extend({
   //   return  str;
   // },
   fillCalendar: function(tasks, context){
-    self = this;
+    var self = this;
 
     tasks.map(function(task){
       // discard task if filter doesnt apply to it
       // model is the current one (model={shop, user}, id=modelId)
       // if(self.filter(task, elementMatch, context)){return;}
 
-      var taskDate = task['scheduledAt'] || task.get("scheduledAt");
+      var taskDate = task[self.getScheduledAtMethod] || task.get(self.getScheduledAtMethod);
       var name = (task['name'] || task.get("name"))
-      var className = (task.hasOwnProperty('isCompleted') ? task['isCompleted'] : task.get('isCompleted')) ? "completed" : "pending"
+      var className = (task.hasOwnProperty(self.isCompletedMethod) ? task[self.isCompletedMethod] : task.get(self.isCompletedMethod)) ? "completed" : "pending"
 
       if(taskDate){
         taskDate = taskDate.toLocaleDateString()
@@ -60,7 +68,7 @@ Ember.EmberCalendarComponent =  Ember.Component.extend({
       if($elem){
         // var str = "<div class='task' data-id='"+task.id+"'><a href='"+self.taskRoute(task)+"'}}>" + task.get("name") + "</a></div>";
 
-        var str = "<div class='task' data-id='"+task.id+"'><a class='"+className+"' href='#'>" + name + "</a></div>";
+        var str = "<div class='task' data-id='"+task.id+"' draggable='true'><a class='"+className+"' href='#'>" + name + "</a></div>";
         var $target = $(".valid[data-date='"+taskDate+"'] .tasks")
         $target.append(str)
       }
@@ -144,5 +152,54 @@ Ember.EmberCalendarComponent =  Ember.Component.extend({
       }
     }
     return this.changeDate(_date, days + 1)
-  }
+  },
+
+  getTaskById: function(id){
+    return this.get("tasks").filter(function(obj){
+      return obj.id == id
+    })[0]
+  },
+
+  // View effects 
+  cleanTargetDayCell: function(){
+      targetDayCell = ""
+  },
+  handleDragEnter: function(e) {
+    this.classList.add('over');
+    targetDayCell = $(this).data("date");
+  },
+  handleDragLeave: function(e) {
+    this.classList.remove('over');
+  },
+  handleDragEnd: function(context){
+    return function(e) {
+      var html = e.target;
+      $(".day[data-date='"+targetDayCell+"'] .tasks").append(html);
+      html.classList.remove('drag_object');
+      var task = context.getTaskById( $(html).data("id") );
+      if(task && task[context.setScheduledAtMethod]){
+        task[context.setScheduledAtMethod](new Date(targetDayCell));
+      }
+    }
+  },
+  handleDragStart: function(e) {
+    e.target.classList.add('drag_object')
+  },
+  activateDragAndDrop: function(context){
+    var targetDayCell = ""
+    var cels = $('.day') 
+    cels.map(function(i, cel){
+      cel.addEventListener('dragend',   context.handleDragEnd(context), false)
+      cel.addEventListener('dragenter', context.handleDragEnter, false)
+      cel.addEventListener('dragleave', context.handleDragLeave, false)
+      cel.addEventListener('dragstart', context.cleanTargetDayCell, false)
+    })
+    var cols = $('.kalendar .task');
+    cols.map(function(i, col) {
+      col.addEventListener('dragstart', context.handleDragStart, false);
+      // col.addEventListener('drop', handleDrop, false); // does not trigger
+    });    
+  }  
+
+
 })
