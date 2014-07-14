@@ -2,10 +2,11 @@ Ember.EmberCalendarComponent =  Ember.Component.extend({
   needsRender: true,
   classNames: ['kalendar', 'calendar'], 
   tagName: 'ul',
+  tasks: [], 
 
   // configurable variables/params
   weeks: 5, 
-  tasks: [], 
+  setScheduledAtMethod: "setScheduledAt", 
   // 'date' name or method to access its date - default scheduledAt
   // 'tag'  name or method to access its tagname for calendar-coloring - those tags get modified on the css
   // 'name'  name or method to access its text on the calendar
@@ -157,40 +158,36 @@ Ember.EmberCalendarComponent =  Ember.Component.extend({
       return obj.id == id
     })[0]
   },
+  
   // View effects 
   cleanTargetDayCell: function(){
       targetDayCell = ""
   },
   handleDragEnter: function(e) {
-    // this / e.target is the current hover target.
     this.classList.add('over');
-    targetDayCell = $(this).data("date")
+    targetDayCell = $(this).data("date");
   },
   handleDragLeave: function(e) {
-    this.classList.remove('over');  // this / e.target is previous target element.
+    this.classList.remove('over');
   },
   handleDragEnd: function(context){
     return function(e) {
       var html = e.target;
-      $(".day[data-date='"+targetDayCell+"'] .tasks").append(html)
-      html.classList.remove('drag_object')
-      // console.log(context)
+      $(".day[data-date='"+targetDayCell+"'] .tasks").append(html);
+      html.classList.remove('drag_object');
       var task = context.getTaskById( $(html).data("id") );
-      if(task && task.setScheduledAt){
-        task.setScheduledAt(new Date(targetDayCell))
-        console.log(task)
+      if(task && task[context.setScheduledAtMethod]){
+        task[context.setScheduledAtMethod](new Date(targetDayCell));
       }
     }
   },
   handleDragStart: function(e) {
-    // this.style.opacity = '0.4';  // add class - remove on dragEnd
     e.target.classList.add('drag_object')
   },
   activateDragAndDrop: function(context){
     var targetDayCell = ""
-    var cels = $('.day') // append on its "tasks"
+    var cels = $('.day') 
     cels.map(function(i, cel){
-      // cel.addEventListener('drop', handleDrop, false)
       cel.addEventListener('dragend',   context.handleDragEnd(context), false)
       cel.addEventListener('dragenter', context.handleDragEnter, false)
       cel.addEventListener('dragleave', context.handleDragLeave, false)
