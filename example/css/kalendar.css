@@ -63,6 +63,8 @@
 .calendar  .present-week-day{
   border-top: 4px solid rgb(253, 214, 214);
 }
-.calendar  .present-week-day.today{
+.calendar .present-week-day.today{
   border-top: 4px solid rgb(209, 107, 105);
 }
+.calendar .over{background: #fcfcfc;}
+.calendar .drag_object{opacity: 0.4;}

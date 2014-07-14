@@ -1,4 +1,4 @@
-Handlebars.registerHelper('calendar', function(weeks, options) {
+Handlebars.registerHelper('calendar', function(weeks, options, yield) {
   // could add a row for day names (mon-tue-...)
   // date on the left or the right
   // 
@@ -14,7 +14,7 @@ Handlebars.registerHelper('calendar', function(weeks, options) {
 
   // var ret = "<ul class='calendar kalendar'>"; 
   // ret += ret = "<ul class='day-names'>"
-  
+
   var ret = "<ul class='day-names'>"
   for(var j=0; j<7; j++){
     ret = ret + "<li class='day' data-day='"+(j+1)%7+"'>"+ dayNames[j+1] +"</li>"

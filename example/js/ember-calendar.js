@@ -9,9 +9,12 @@ Ember.EmberCalendarComponent =  Ember.Component.extend({
   // 'tag'  name or method to access its tagname for calendar-coloring - those tags get modified on the css
   // 'name'  name or method to access its text on the calendar
   // isCompleted
-  // save tasks for future reference? 
+  // save tasks for future reference? - update calendar on event
   // link method with task as a param 
   // calendar.options - day names, starting day, size? ... 
+  // calendar-cell onclick event callback // if any, redirect to nested view (new_x) with a modal with the date as param
+  // calendar-task element onclick_event/option_click callback // redirect to show view or edit modal view 
+  // dragable? - callback on element to update its date
 
   // pending
   // multi-date tasks
@@ -24,9 +27,10 @@ Ember.EmberCalendarComponent =  Ember.Component.extend({
     if(!this.needsRender){ return; }
     // works only when loaded for first time
 
-    self = this
-    self.fillCalendar(self.get('tasks')||[], self)
-    this.needsRender = false;
+    var ember_calendar = this
+    ember_calendar.fillCalendar(ember_calendar.get('tasks')||[], ember_calendar)
+    ember_calendar.needsRender = false;
+    ember_calendar.activateDragAndDrop();
   },
 
   filter: function(task, elementMatch){
@@ -42,7 +46,7 @@ Ember.EmberCalendarComponent =  Ember.Component.extend({
   //   return  str;
   // },
   fillCalendar: function(tasks, context){
-    self = this;
+    var self = this;
 
     tasks.map(function(task){
       // discard task if filter doesnt apply to it
@@ -60,7 +64,7 @@ Ember.EmberCalendarComponent =  Ember.Component.extend({
       if($elem){
         // var str = "<div class='task' data-id='"+task.id+"'><a href='"+self.taskRoute(task)+"'}}>" + task.get("name") + "</a></div>";
 
-        var str = "<div class='task' data-id='"+task.id+"'><a class='"+className+"' href='#'>" + name + "</a></div>";
+        var str = "<div class='task' data-id='"+task.id+"' draggable='true'><a class='"+className+"' href='#'>" + name + "</a></div>";
         var $target = $(".valid[data-date='"+taskDate+"'] .tasks")
         $target.append(str)
       }
@@ -144,5 +148,47 @@ Ember.EmberCalendarComponent =  Ember.Component.extend({
       }
     }
     return this.changeDate(_date, days + 1)
-  }
+  },
+
+
+  // View effects 
+  cleanTargetDayCell: function(){
+      targetDayCell = ""
+  },
+  handleDragEnter: function(e) {
+    // this / e.target is the current hover target.
+    this.classList.add('over');
+    targetDayCell = $(this).data("date")
+  },
+  handleDragLeave: function(e) {
+    this.classList.remove('over');  // this / e.target is previous target element.
+  },
+  handleDragEnd: function(e) {
+    var html = e.target;
+    $(".day[data-date='"+targetDayCell+"'] .tasks").append(html)
+    html.classList.remove('drag_object')
+  },
+  handleDragStart: function(e) {
+    // this.style.opacity = '0.4';  // add class - remove on dragEnd
+    this.classList.add('drag_object')
+  },
+  activateDragAndDrop: function(){
+    var ember_calendar = this;
+    var targetDayCell = ""
+    var cels = $('.day') // append on its "tasks"
+    cels.map(function(i, cel){
+      // cel.addEventListener('drop', handleDrop, false)
+      cel.addEventListener('dragend',   ember_calendar.handleDragEnd, false)
+      cel.addEventListener('dragenter', ember_calendar.handleDragEnter, false)
+      cel.addEventListener('dragleave', ember_calendar.handleDragLeave, false)
+      cel.addEventListener('dragstart', ember_calendar.cleanTargetDayCell, false)
+    })
+    var cols = $('.kalendar .task');
+    cols.map(function(i, col) {
+      col.addEventListener('dragstart', ember_calendar.handleDragStart, false);
+      // col.addEventListener('drop', handleDrop, false); // does not trigger
+    });    
+  }  
+
+
 })
